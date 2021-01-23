@@ -1,22 +1,36 @@
-import { takeEvery, put, call, select, all } from 'redux-saga/effects';
+import { takeEvery, put, call, all } from 'redux-saga/effects';
 import {
-  requestMovies,
-  moviesRequested,
-  requestMovieDetails,
-  movieDetailsRequested,
-  moviesFetched,
-  startFetching,
+  fetchedMoviesAsync,
+  fetchedMovieDetailsAsync,
+  searchedMoviesAsync,
+  startSearching,
 } from './actions';
 import { api } from '../components/api/api';
-import { AppState } from './rootReducer';
+import { FetchMoviesAsync, FetchMovieDetailsAsync, SearchMoviesAsync } from './types';
 
-function* fetchMovieWorker() {
-  yield put(startFetching());
-  const searchValue = yield select(getSearchValue);
+function* searchMovieWorker(action: SearchMoviesAsync) {
+  const { payload } = action;
+  yield put(startSearching());
   try {
-    const res = yield call(api.fetch.fetchMovies, searchValue);
+    const res = yield call(api.fetch.fetchMovies, payload);
     if (res.data.Search) {
-      yield put(moviesFetched(res.data.Search));
+      yield put(searchedMoviesAsync(res.data.Search));
+    }
+  } catch (e) {
+    yield put({ type: 'REQUEST_FAILED', payload: e.toString() });
+  }
+}
+
+function* searchMovieWatcher() {
+  yield takeEvery('SEARCH_MOVIES_ASYNC', searchMovieWorker);
+}
+
+function* fetchMovieWorker(action: FetchMoviesAsync) {
+  const { payload } = action;
+  try {
+    const res = yield call(api.fetch.fetchMovies, payload);
+    if (res.data.Search) {
+      yield put(fetchedMoviesAsync(res.data.Search));
     }
   } catch (e) {
     yield put({ type: 'REQUEST_FAILED', payload: e.toString() });
@@ -24,33 +38,15 @@ function* fetchMovieWorker() {
 }
 
 function* fetchMovieWatcher() {
-  yield takeEvery('FETCH_MOVIES', fetchMovieWorker);
+  yield takeEvery('FETCH_MOVIES_ASYNC', fetchMovieWorker);
 }
 
-function* movieWorker() {
-  yield put(requestMovies());
-  const searchValue = yield select(getSearchValue);
+function* movieDetailsWorker(action: FetchMovieDetailsAsync) {
+  const { payload } = action;
   try {
-    const res = yield call(api.fetch.fetchMovies, searchValue);
-    if (res.data.Search) {
-      yield put(moviesRequested(res.data.Search));
-    }
-  } catch (e) {
-    yield put({ type: 'REQUEST_FAILED', payload: e.toString() });
-  }
-}
-
-function* movieWatcher() {
-  yield takeEvery('SEARCH_MOVIES', movieWorker);
-}
-
-function* movieDetailsWorker() {
-  yield put(requestMovieDetails());
-  const chosenMovie = yield select(getId);
-  try {
-    const res = yield call(api.fetch.fetchMovieDetails, chosenMovie);
+    const res = yield call(api.fetch.fetchMovieDetails, payload);
     if (res.data) {
-      yield put(movieDetailsRequested(res.data));
+      yield put(fetchedMovieDetailsAsync(res.data));
     }
   } catch (e) {
     yield put({ type: 'REQUEST_FAILED', payload: e.toString() });
@@ -58,13 +54,9 @@ function* movieDetailsWorker() {
 }
 
 function* movieDetailsWatcher() {
-  yield takeEvery('MOVIE_CHOSEN', movieDetailsWorker);
+  yield takeEvery('FETCH_MOVIE_DETAILS_ASYNC', movieDetailsWorker);
 }
 
 export function* rootSaga(): Generator {
-  yield all([movieWatcher(), movieDetailsWatcher(), fetchMovieWatcher()]);
+  yield all([searchMovieWatcher(), fetchMovieWatcher(), movieDetailsWatcher()]);
 }
-
-const getSearchValue = (state: AppState) => state.movies.searchValue;
-
-const getId = (state: AppState) => state.movies.chosenMovie;

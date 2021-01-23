@@ -1,4 +1,4 @@
-import { IMovieDetails, MovieInitialState, MovieSearchingTypes } from './types';
+import { IMovieDetails, IMovieState, MovieSearchingTypes } from './types';
 
 export const getMovieDetailsState = (): IMovieDetails => ({
   Actors: '',
@@ -28,11 +28,11 @@ export const getMovieDetailsState = (): IMovieDetails => ({
   imdbVotes: '',
 });
 
-export const getInitialState = (): MovieInitialState => ({
+export const getInitialState = (): IMovieState => ({
   searchValue: '',
   loading: false,
   movies: [],
-  fetchedMovies: [],
+  searchedMovies: [],
   chosenMovie: '',
   movieDetails: {
     ...getMovieDetailsState(),
@@ -40,68 +40,58 @@ export const getInitialState = (): MovieInitialState => ({
 });
 
 export const moviesReducer = (
-  state: MovieInitialState = getInitialState(),
+  state: IMovieState = getInitialState(),
   action: MovieSearchingTypes
-): MovieInitialState => {
+): IMovieState => {
   switch (action.type) {
-    case 'START_FETCHING':
+    case 'START_SEARCHING':
       return {
         ...state,
         loading: true,
       };
-    case 'FETCH_MOVIES':
+    case 'SEARCH_MOVIES_ASYNC':
       return {
         ...state,
         searchValue: action.payload,
       };
-    case 'FETCHED_MOVIES':
+    case 'SEARCHED_MOVIES_ASYNC':
       return {
         ...state,
         loading: false,
-        fetchedMovies: action.payload,
+        searchedMovies: action.payload,
       };
-    case 'SEARCH_MOVIES':
+    case 'FETCH_MOVIES_ASYNC':
       return {
         ...state,
         searchValue: action.payload,
       };
-    case 'REQUEST_MOVIES':
-      return {
-        ...state,
-        loading: true,
-      };
-    case 'MOVIES_REQUESTED':
+    case 'FETCHED_MOVIES_ASYNC':
       return {
         ...state,
         loading: false,
         movies: action.payload,
       };
-    case 'MOVIE_CHOSEN':
+    case 'FETCH_MOVIE_DETAILS_ASYNC':
       return {
         ...state,
         chosenMovie: action.payload,
       };
-    case 'REQUEST_MOVIE_DETAILS':
+    case 'FETCHED_MOVIE_DETAILS_ASYNC':
       return {
         ...state,
-        loading: true,
+        loading: false,
+        movieDetails: action.payload,
       };
     case 'REFRESH_SETTINGS':
       return {
         searchValue: '',
         loading: false,
         movies: [],
-        fetchedMovies: [],
+        searchedMovies: [],
         chosenMovie: '',
         movieDetails: {
           ...getMovieDetailsState(),
         },
-      };
-    case 'MOVIE_DETAILS_REQUESTED':
-      return {
-        ...state,
-        loading: false,
-        movieDetails: action.payload,
       };
     default:
       return state;

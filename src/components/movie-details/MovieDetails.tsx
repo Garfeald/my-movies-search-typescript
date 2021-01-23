@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../redux/rootReducer';
-import { MovieInitialState } from '../../redux/types';
+import { IMovieState } from '../../redux/types';
 
 const useStyles = makeStyles(() => ({
   spinner: {
@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const MovieDetails: FC = (): ReactElement => {
-  const { loading, movieDetails } = useSelector<AppState, MovieInitialState>(
+  const { loading, movieDetails } = useSelector<AppState, IMovieState>(
     (state: AppState) => state.movies
   );
   const classes = useStyles();

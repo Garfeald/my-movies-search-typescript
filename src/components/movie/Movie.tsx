@@ -3,8 +3,8 @@ import { TableRow, TableCell } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import { movieChosen } from '../../redux/actions';
-import { IMovies } from '../../redux/types';
+import { fetchMovieDetailsAsync } from '../../redux/actions';
+import { IMovie } from '../../redux/types';
 
 const useStyles = makeStyles(() => ({
   row: {
@@ -20,12 +20,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const Movie = (movie: IMovies): ReactElement => {
+export const Movie = (movie: IMovie): ReactElement => {
   const dispatch = useDispatch();
   const history = useHistory();
   const onClick = (e: BaseSyntheticEvent) => {
     const { id } = e.currentTarget.dataset;
-    dispatch(movieChosen(id));
+    dispatch(fetchMovieDetailsAsync(id));
     history.push(`/movies/${id}`);
   };
   const { Poster, Title, imdbID, Year, Type } = movie;

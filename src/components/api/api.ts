@@ -1,12 +1,12 @@
-import { IMovieDetails, IMovies } from '../../redux/types';
+import { IMovieDetails, IMovie } from '../../redux/types';
 
 const axios = require('axios');
 
 export const api = {
   fetch: {
-    fetchMovies: (searchValue: string): Promise<IMovies> =>
-      axios.get(`http://www.omdbapi.com/?s=${searchValue}&apikey=${process.env.API_KEY}&`),
-    fetchMovieDetails: (id: string): Promise<IMovieDetails> =>
-      axios.get(`http://www.omdbapi.com/?i=${id}&apikey=${process.env.API_KEY}&`),
+    fetchMovies: (payload: string): Promise<IMovie> =>
+      axios.get(`http://www.omdbapi.com/?s=${payload}&apikey=${process.env.API_KEY}&`),
+    fetchMovieDetails: (payload: string): Promise<IMovieDetails> =>
+      axios.get(`http://www.omdbapi.com/?i=${payload}&apikey=${process.env.API_KEY}&`),
   },
 };

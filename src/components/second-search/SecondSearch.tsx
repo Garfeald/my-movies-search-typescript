@@ -3,9 +3,9 @@ import { TextField, CircularProgress, makeStyles } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchMovies, movieChosen } from '../../redux/actions';
+import { searchMoviesAsync, fetchMovieDetailsAsync } from '../../redux/actions';
 import { AppState } from '../../redux/rootReducer';
-import { IMovies, MovieInitialState } from '../../redux/types';
+import { IMovie, IMovieState } from '../../redux/types';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -17,9 +17,7 @@ const useStyles = makeStyles(() => ({
 
 export const SecondSearch: FC = (): ReactElement => {
   const [inputValue, setInputValue] = useState('');
-  const { fetchedMovies } = useSelector<AppState, MovieInitialState>(
-    (state: AppState) => state.movies
-  );
+  const { searchedMovies } = useSelector<AppState, IMovieState>((state: AppState) => state.movies);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -29,9 +27,9 @@ export const SecondSearch: FC = (): ReactElement => {
     setInputValue(e.target.value);
   };
 
-  const selectMovie = (event: ChangeEvent<{}>, value: IMovies) => {
+  const selectMovie = (event: ChangeEvent<{}>, value: IMovie) => {
     if (value.imdbID) {
-      dispatch(movieChosen(value.imdbID));
+      dispatch(fetchMovieDetailsAsync(value.imdbID));
       history.push(`/movies/${value.imdbID}`);
     }
   };
@@ -39,18 +37,18 @@ export const SecondSearch: FC = (): ReactElement => {
   useEffect(() => {
     setLoading(true);
     if (inputValue) {
-      dispatch(fetchMovies(inputValue));
+      dispatch(searchMoviesAsync(inputValue));
     }
     setLoading(false);
   }, [inputValue, setInputValue]);
   return (
     <div className={classes.root}>
       <Autocomplete
-        onChange={(event, value) => selectMovie(event, value as IMovies)}
+        onChange={(event, value) => selectMovie(event, value as IMovie)}
         freeSolo
         filterOptions={(option) => option}
         getOptionLabel={(option) => option.Title}
-        options={fetchedMovies || []}
+        options={searchedMovies || []}
         loading={loading}
         renderInput={(params) => (
           <TextField

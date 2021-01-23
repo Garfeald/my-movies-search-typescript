@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Details, Main } from '../../pages';
-import { MovieInitialState } from '../../redux/types';
+import { IMovieState } from '../../redux/types';
 import { AppState } from '../../redux/rootReducer';
 
 const useStyles = makeStyles(() => ({
@@ -16,9 +16,7 @@ const useStyles = makeStyles(() => ({
 
 export const AppRouter: FC = (): ReactElement => {
   const classes = useStyles();
-  const { chosenMovie } = useSelector<AppState, MovieInitialState>(
-    (state: AppState) => state.movies
-  );
+  const { chosenMovie } = useSelector<AppState, IMovieState>((state: AppState) => state.movies);
   return (
     <Router>
       <div className={classes.root}>

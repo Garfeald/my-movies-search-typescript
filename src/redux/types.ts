@@ -1,12 +1,17 @@
-export type IMovies = {
+export interface IMovie {
   Poster: string;
   Title: string;
   imdbID: string;
   Year: string;
   Type: string;
-};
+}
 
-export type IMovieDetails = {
+export interface IRatings {
+  Source: string;
+  Value: string;
+}
+
+export interface IMovieDetails {
   Actors: string;
   Awords: string;
   BoxOffice: string;
@@ -20,7 +25,7 @@ export type IMovieDetails = {
   Poster: string;
   Production: string;
   Rated: string;
-  Ratings: [];
+  Ratings: IRatings[];
   Released: string;
   Response: string;
   Runtime: string;
@@ -32,60 +37,56 @@ export type IMovieDetails = {
   imdbID: string;
   imdbRating: string;
   imdbVotes: string;
-};
+}
 
-export interface MovieInitialState {
+export interface IMovieState {
   searchValue: string;
   loading: boolean;
-  movies: IMovies[];
-  fetchedMovies: IMovies[];
+  movies: IMovie[];
+  searchedMovies: IMovie[];
   chosenMovie: string;
   movieDetails: IMovieDetails;
 }
 
-export const SEARCH_MOVIES = 'SEARCH_MOVIES';
-export type SearchMovies = {
-  type: typeof SEARCH_MOVIES;
+export const SEARCH_MOVIES_ASYNC = 'SEARCH_MOVIES_ASYNC';
+export type SearchMoviesAsync = {
+  type: typeof SEARCH_MOVIES_ASYNC;
   payload: string;
 };
 
-export const START_FETCHING = 'START_FETCHING';
-export type StartFetchingAsync = {
-  type: typeof START_FETCHING;
+export const START_SEARCHING = 'START_SEARCHING';
+export type StartSearching = {
+  type: typeof START_SEARCHING;
 };
 
-export const FETCH_MOVIES = 'FETCH_MOVIES';
+export const SEARCHED_MOVIES_ASYNC = 'SEARCHED_MOVIES_ASYNC';
+export type SearchedMoviesAsync = {
+  type: typeof SEARCHED_MOVIES_ASYNC;
+  payload: IMovie[];
+};
+
+export const FETCH_MOVIES_ASYNC = 'FETCH_MOVIES_ASYNC';
 export type FetchMoviesAsync = {
-  type: typeof FETCH_MOVIES;
+  type: typeof FETCH_MOVIES_ASYNC;
   payload: string;
 };
 
-export const FETCHED_MOVIES = 'FETCHED_MOVIES';
+export const FETCHED_MOVIES_ASYNC = 'FETCHED_MOVIES_ASYNC';
 export type FetchedMoviesAsync = {
-  type: typeof FETCHED_MOVIES;
-  payload: IMovies[];
+  type: typeof FETCHED_MOVIES_ASYNC;
+  payload: IMovie[];
 };
 
-export const REQUEST_MOVIES = 'REQUEST_MOVIES';
-export type RequestMovies = {
-  type: typeof REQUEST_MOVIES;
-};
-
-export const MOVIES_REQUESTED = 'MOVIES_REQUESTED';
-export type MovieRequestedAsync = {
-  type: typeof MOVIES_REQUESTED;
-  payload: IMovies[];
-};
-
-export const MOVIE_CHOSEN = 'MOVIE_CHOSEN';
-export type MovieChosenAsync = {
-  type: typeof MOVIE_CHOSEN;
+export const FETCH_MOVIE_DETAILS_ASYNC = 'FETCH_MOVIE_DETAILS_ASYNC';
+export type FetchMovieDetailsAsync = {
+  type: typeof FETCH_MOVIE_DETAILS_ASYNC;
   payload: string;
 };
 
-export const REQUEST_MOVIE_DETAILS = 'REQUEST_MOVIE_DETAILS';
-export type RequestMovieDetails = {
-  type: typeof REQUEST_MOVIE_DETAILS;
+export const FETCHED_MOVIE_DETAILS_ASYNC = 'FETCHED_MOVIE_DETAILS_ASYNC';
+export type FetchedMovieDetailsAsync = {
+  type: typeof FETCHED_MOVIE_DETAILS_ASYNC;
+  payload: IMovieDetails;
 };
 
 export const REFRESH_SETTINGS = 'REFRESH_SETTINGS';
@@ -93,20 +94,12 @@ export type RefreshSettings = {
   type: typeof REFRESH_SETTINGS;
 };
 
-export const MOVIE_DETAILS_REQUESTED = 'MOVIE_DETAILS_REQUESTED';
-export type MovieDetailsRequestedAsync = {
-  type: typeof MOVIE_DETAILS_REQUESTED;
-  payload: IMovieDetails;
-};
-
 export type MovieSearchingTypes =
-  | SearchMovies
-  | StartFetchingAsync
+  | SearchMoviesAsync
+  | StartSearching
   | FetchMoviesAsync
+  | SearchedMoviesAsync
   | FetchedMoviesAsync
-  | RequestMovies
-  | MovieRequestedAsync
-  | RequestMovieDetails
   | RefreshSettings
-  | MovieDetailsRequestedAsync
-  | MovieChosenAsync;
+  | FetchMovieDetailsAsync
+  | FetchedMovieDetailsAsync;

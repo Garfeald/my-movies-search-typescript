@@ -10,8 +10,8 @@ import { TextField, CircularProgress, makeStyles, AppBar, Typography } from '@ma
 import { useDispatch, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useHistory } from 'react-router';
-import { searchMovies, fetchMovies } from '../../redux/actions';
-import { MovieInitialState } from '../../redux/types';
+import { searchMoviesAsync, fetchMoviesAsync } from '../../redux/actions';
+import { IMovieState } from '../../redux/types';
 import { AppState } from '../../redux/rootReducer';
 
 const useStyles = makeStyles(() => ({
@@ -32,9 +32,7 @@ const useStyles = makeStyles(() => ({
 
 export const MainSearch: FC = (): ReactElement => {
   const [inputValue, setInputValue] = useState('');
-  const { fetchedMovies } = useSelector<AppState, MovieInitialState>(
-    (state: AppState) => state.movies
-  );
+  const { searchedMovies } = useSelector<AppState, IMovieState>((state: AppState) => state.movies);
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -44,14 +42,14 @@ export const MainSearch: FC = (): ReactElement => {
 
   const onChangeField = (e: BaseSyntheticEvent) => {
     const { id } = e.currentTarget.dataset;
-    dispatch(searchMovies(inputValue));
+    dispatch(fetchMoviesAsync(inputValue));
     history.push(`/movies/:${id}`);
   };
 
   useEffect(() => {
     setLoading(true);
-    if (inputValue) {
-      dispatch(fetchMovies(inputValue));
+    if (inputValue.length > 2) {
+      dispatch(searchMoviesAsync(inputValue));
     }
     setLoading(false);
   }, [inputValue]);
@@ -69,7 +67,7 @@ export const MainSearch: FC = (): ReactElement => {
         freeSolo
         filterOptions={(options) => options}
         getOptionLabel={(options) => options.Title}
-        options={fetchedMovies || []}
+        options={searchedMovies || []}
         loading={loading}
         renderInput={(params) => (
           <TextField

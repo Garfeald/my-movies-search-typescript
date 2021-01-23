@@ -1,60 +1,52 @@
 import {
-  FETCH_MOVIES,
-  FETCHED_MOVIES,
-  IMovies,
-  MOVIE_CHOSEN,
-  MOVIE_DETAILS_REQUESTED,
+  FETCH_MOVIES_ASYNC,
+  SEARCHED_MOVIES_ASYNC,
+  IMovie,
+  // MOVIE_CHOSEN,
+  FETCHED_MOVIE_DETAILS_ASYNC,
   IMovieDetails,
-  MOVIES_REQUESTED,
+  FETCHED_MOVIES_ASYNC,
   MovieSearchingTypes,
   REFRESH_SETTINGS,
-  REQUEST_MOVIE_DETAILS,
-  SEARCH_MOVIES,
-  START_FETCHING,
+  FETCH_MOVIE_DETAILS_ASYNC,
+  SEARCH_MOVIES_ASYNC,
+  START_SEARCHING,
 } from './types';
 
-export const searchMovies = (searchValue: string): MovieSearchingTypes => ({
-  type: SEARCH_MOVIES,
+export const searchMoviesAsync = (searchValue: string): MovieSearchingTypes => ({
+  type: SEARCH_MOVIES_ASYNC,
   payload: searchValue,
 });
 
-export const startFetching = (): MovieSearchingTypes => ({
-  type: START_FETCHING,
+export const startSearching = (): MovieSearchingTypes => ({
+  type: START_SEARCHING,
 });
 
-export const fetchMovies = (searchValue: string): MovieSearchingTypes => ({
-  type: FETCH_MOVIES,
+export const searchedMoviesAsync = (searchedMovies: IMovie[]): MovieSearchingTypes => ({
+  type: SEARCHED_MOVIES_ASYNC,
+  payload: searchedMovies,
+});
+
+export const fetchMoviesAsync = (searchValue: string): MovieSearchingTypes => ({
+  type: FETCH_MOVIES_ASYNC,
   payload: searchValue,
 });
 
-export const moviesFetched = (fetchedMovies: IMovies[]): MovieSearchingTypes => ({
-  type: FETCHED_MOVIES,
-  payload: fetchedMovies,
-});
-
-export const requestMovies = (): MovieSearchingTypes => ({
-  type: 'REQUEST_MOVIES',
-});
-
-export const moviesRequested = (movies: IMovies[]): MovieSearchingTypes => ({
-  type: MOVIES_REQUESTED,
+export const fetchedMoviesAsync = (movies: IMovie[]): MovieSearchingTypes => ({
+  type: FETCHED_MOVIES_ASYNC,
   payload: movies,
 });
 
-export const movieChosen = (id: string): MovieSearchingTypes => ({
-  type: MOVIE_CHOSEN,
+export const fetchMovieDetailsAsync = (id: string): MovieSearchingTypes => ({
+  type: FETCH_MOVIE_DETAILS_ASYNC,
   payload: id,
 });
 
-export const requestMovieDetails = (): MovieSearchingTypes => ({
-  type: REQUEST_MOVIE_DETAILS,
+export const fetchedMovieDetailsAsync = (movieDetails: IMovieDetails): MovieSearchingTypes => ({
+  type: FETCHED_MOVIE_DETAILS_ASYNC,
+  payload: movieDetails,
 });
 
 export const refreshSettings = (): MovieSearchingTypes => ({
   type: REFRESH_SETTINGS,
-});
-
-export const movieDetailsRequested = (movieDetails: IMovieDetails): MovieSearchingTypes => ({
-  type: MOVIE_DETAILS_REQUESTED,
-  payload: movieDetails,
 });

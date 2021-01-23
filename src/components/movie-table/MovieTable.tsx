@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { CircularProgress, Table, TableBody } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Movie } from '../movie/Movie';
-import { IMovies, MovieInitialState } from '../../redux/types';
+import { IMovie, IMovieState } from '../../redux/types';
 import { AppState } from '../../redux/rootReducer';
 
 const useStyles = makeStyles(() => ({
@@ -19,8 +19,8 @@ const useStyles = makeStyles(() => ({
 
 export const MovieTable: FC = (): ReactElement => {
   const classes = useStyles();
-  const { loading } = useSelector<AppState, MovieInitialState>((state: AppState) => state.movies);
-  const { movies } = useSelector<AppState, MovieInitialState>((state: AppState) => state.movies);
+  const { loading } = useSelector<AppState, IMovieState>((state: AppState) => state.movies);
+  const { movies } = useSelector<AppState, IMovieState>((state: AppState) => state.movies);
   return (
     <>
       <div className={classes.root}>
@@ -32,7 +32,7 @@ export const MovieTable: FC = (): ReactElement => {
           <Table>
             {movies && (
               <TableBody>
-                {movies.map((movie: IMovies) => (
+                {movies.map((movie: IMovie) => (
                   <Movie key={movie.imdbID} {...movie} />
                 ))}
               </TableBody>
