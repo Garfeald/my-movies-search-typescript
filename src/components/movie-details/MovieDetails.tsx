@@ -56,10 +56,8 @@ export const MovieDetails: FC = (): ReactElement => {
           <Grid item lg={6} md={6} xs={12}>
             <CardMedia
               className={classes.cardMedia}
-              // @ts-ignore
-              image={movieDetails.Poster || null}
-              // @ts-ignore
-              title={movieDetails.Title || null}
+              image={movieDetails.Poster}
+              title={movieDetails.Title}
             />
           </Grid>
           <Grid item lg={6} md={6} xs={12}>
